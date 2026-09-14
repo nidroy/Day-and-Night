@@ -47,6 +47,7 @@ public class FileLogSink : ILogSink
     /// <param name="message">Текст сообщения.</param>
     public void Write(LogLevel level, string source, string message)
     {
+        // Формируем базовую строку лога.
         string formattedMessage = LoggerMessageFormatter.Format(level, source, message);
 
         lock (_lockObject)

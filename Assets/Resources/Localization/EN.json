@@ -1,0 +1,60 @@
+{
+  "LocalizationEntries": [
+    {
+      "Key": "Main menu title",
+      "Text": "Day and Night"
+    },
+    {
+      "Key": "New game button",
+      "Text": "New Game"
+    },
+    {
+      "Key": "Continue button",
+      "Text": "Continue"
+    },
+    {
+      "Key": "Settings button",
+      "Text": "Settings"
+    },
+    {
+      "Key": "Quit game button",
+      "Text": "Quit Game"
+    },
+    {
+      "Key": "Screen resolution title",
+      "Text": "Screen resolution"
+    },
+    {
+      "Key": "Localization title",
+      "Text": "Localization"
+    },
+    {
+      "Key": "Full screen title",
+      "Text": "Full screen"
+    },
+    {
+      "Key": "File logging title",
+      "Text": "File logging"
+    },
+    {
+      "Key": "Music volume title",
+      "Text": "Music volume"
+    },
+    {
+      "Key": "Sound volume title",
+      "Text": "Sound volume"
+    },
+    {
+      "Key": "Save button",
+      "Text": "Save"
+    },
+    {
+      "Key": "Cancel button",
+      "Text": "Cancel"
+    },
+    {
+      "Key": "Close button",
+      "Text": "Close"
+    }
+  ]
+}

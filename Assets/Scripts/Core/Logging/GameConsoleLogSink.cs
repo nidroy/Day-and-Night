@@ -58,13 +58,10 @@ public class GameConsoleLogSink : ILogSink
         // Подсвечиваем сообщение в зависимости от уровня.
         string coloredMessage = ApplyColor(level, formattedMessage);
 
-        // Добавляем новое сообщение в буфер.
         _lines.Enqueue(coloredMessage);
 
-        // Если количество строк превышает лимит, удаляем самые старые строки.
         DeleteOldLines();
 
-        // Обновляем видимый текст консоли.
         RefreshConsoleText();
     }
 
