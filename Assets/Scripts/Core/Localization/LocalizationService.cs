@@ -117,7 +117,6 @@ public static class LocalizationService
     /// </summary>
     private static void LogInfo(string message)
     {
-        Logger.ToggleGameConsoleLogging(false);
         Logger.Log(LogLevel.Info, nameof(LocalizationService), message);
     }
 
@@ -126,7 +125,6 @@ public static class LocalizationService
     /// </summary>
     private static void LogWarning(string message)
     {
-        Logger.ToggleGameConsoleLogging(false);
         Logger.Log(LogLevel.Warning, nameof(LocalizationService), message);
     }
 
@@ -135,7 +133,6 @@ public static class LocalizationService
     /// </summary>
     private static void LogError(string message)
     {
-        Logger.ToggleGameConsoleLogging(false);
         Logger.Log(LogLevel.Error, nameof(LocalizationService), message);
     }
 }

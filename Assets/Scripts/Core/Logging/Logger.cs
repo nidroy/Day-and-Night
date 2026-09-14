@@ -54,14 +54,30 @@ public static class Logger
 
 
     /// <summary>
-    /// Флаг возвращает текущее состояние файлового логирования.
+    /// Свойство определяет текущее состояние файлового логирования.
     /// </summary>
-    public static bool IsFileLoggingEnabled => _isFileLoggingEnabled;
+    public static bool IsFileLoggingEnabled
+    {
+        get => _isFileLoggingEnabled;
+        set
+        {
+            _isFileLoggingEnabled = value;
+
+            if (value && _fileLogSink == null)
+            {
+                _fileLogSink = new FileLogSink(_logFilePath, _maxLogFileSizeMB);
+            }
+        }
+    }
 
     /// <summary>
-    /// Возвращает текущее состояние логирования во внутриигровую консоль.
+    /// Свойство определяет текущее состояние логирования во внутриигровую консоль.
     /// </summary>
-    public static bool IsGameConsoleLoggingEnabled => _isGameConsoleLoggingEnabled;
+    public static bool IsGameConsoleLoggingEnabled
+    {
+        get => _isGameConsoleLoggingEnabled;
+        set => _isGameConsoleLoggingEnabled = value;
+    }
 
 
 
@@ -72,31 +88,6 @@ public static class Logger
     public static void InitializeGameConsole(TMP_Text consoleText)
     {
         _gameConsoleLogSink = new GameConsoleLogSink(consoleText, _gameConsoleMaxLines);
-    }
-
-
-
-    /// <summary>
-    /// Метод включает или отключает запись логов в файл.
-    /// </summary>
-    /// <param name="enabled">true — включить файловое логирование, false — отключить.</param>
-    public static void ToggleFileLogging(bool enabled)
-    {
-        _isFileLoggingEnabled = enabled;
-
-        if (enabled && _fileLogSink == null)
-        {
-            _fileLogSink = new FileLogSink(_logFilePath, _maxLogFileSizeMB);
-        }
-    }
-
-    /// <summary>
-    /// Метод включает или отключает вывод логов во внутриигровую консоль.
-    /// </summary>
-    /// <param name="enabled">true — включить вывод в игровую консоль, false — отключить.</param>
-    public static void ToggleGameConsoleLogging(bool enabled)
-    {
-        _isGameConsoleLoggingEnabled = enabled;
     }
 
 
