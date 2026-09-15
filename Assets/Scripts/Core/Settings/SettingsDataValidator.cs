@@ -30,6 +30,10 @@ public static class SettingsDataValidator
         {
             data.ScreenResolution = Globals.SettingsDefaultScreenResolution;
         }
+        else
+        {
+            data.ScreenResolution = data.ScreenResolution.Trim();
+        }
 
         // Если локализация не задана, используем значение по умолчанию.
         if (string.IsNullOrWhiteSpace(data.Localization))

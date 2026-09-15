@@ -4,8 +4,8 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// Сервис управления настройками игры.
-/// Отвечает за загрузку, сохранение, удаление и применение настроек игры.
+/// Сервис управления настройками.
+/// Отвечает за загрузку, сохранение, удаление и применение настроек.
 /// </summary>
 public static class SettingsService
 {
@@ -13,7 +13,7 @@ public static class SettingsService
     /// Репозиторий для работы с файлом настроек.
     /// </summary>
     private static readonly SettingsFileRepository _settingsFileRepository =
-        new SettingsFileRepository(Globals.GameSettingsFilePath);
+        new SettingsFileRepository(Globals.SettingsFilePath);
 
     /// <summary>
     /// Настройки, хранящиеся в памяти.
@@ -86,6 +86,15 @@ public static class SettingsService
     {
         get => _settingsData.IsFileLogging;
         set => _settingsData.IsFileLogging = value;
+    }
+
+    /// <summary>
+    /// Свойство определяет включение логирования во внутриигровую консоль.
+    /// </summary>
+    public static bool IsGameConsoleLogging
+    {
+        get => _settingsData.IsGameConsoleLogging;
+        set => _settingsData.IsGameConsoleLogging = value;
     }
 
 
@@ -197,6 +206,7 @@ public static class SettingsService
         ApplyScreenResolution(_settingsData.ScreenResolution, _settingsData.IsFullScreen);
         ApplyFullScreen(_settingsData.IsFullScreen);
         ApplyFileLogging(_settingsData.IsFileLogging);
+        ApplyGameConsoleLogging(_settingsData.IsGameConsoleLogging);
 
         LogInfo("Current settings applied successfully.");
     }
@@ -214,7 +224,8 @@ public static class SettingsService
             return;
         }
 
-        string[] values = screenResolution.Split('x');
+        string normalizedResolution = screenResolution.Replace(" ", "");
+        string[] values = normalizedResolution.Split('x');
 
         if (values.Length != 2)
         {
@@ -292,10 +303,21 @@ public static class SettingsService
     }
 
     /// <summary>
+    /// Метод применяет настройку вывода логов во внутриигровую консоль.
+    /// </summary>
+    /// <param name="isGameConsoleLogging"> True, если вывод логов во внутриигровую консоль должен быть включён; иначе false.</param>
+    public static void ApplyGameConsoleLogging(bool isGameConsoleLogging)
+    {
+        Logger.IsGameConsoleLoggingEnabled = isGameConsoleLogging;
+
+        LogInfo($"Game console logging applied: {isGameConsoleLogging}");
+    }
+
+    /// <summary>
     /// Метод применяет локализацию к переданным UI-текстам.
     /// </summary>
     /// <param name="languageCode">Код языка.</param>
-    /// <param name="localizationTargets">Словарь ключей текстовых компонентов и UI-текстовых компонентов.</param>
+    /// <param name="localizationTargets">Список пар: ключ локализации и соответствующий TMP_Text.</param>
     public static void ApplyLocalization(string languageCode, List<KeyValuePair<string, TMP_Text>> localizationTargets)
     {
         if (!LocalizationService.LoadLocalization(languageCode))
@@ -306,7 +328,7 @@ public static class SettingsService
 
         if (localizationTargets == null)
         {
-            LogWarning("Localization target dictionary is null. Apply skipped.");
+            LogWarning("Localization target list is null. Apply skipped.");
             return;
         }
 

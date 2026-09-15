@@ -28,26 +28,26 @@ public static class Globals
 
 
     /// <summary>
-    /// Имя папки, в которой хранятся настройки игры.
+    /// Имя папки, в которой хранятся настройки.
     /// </summary>
-    private const string _gameSettingsFolderName = "Game settings";
+    private const string _settingsFolderName = "Settings";
 
     /// <summary>
-    /// Имя файла настроек игры.
+    /// Имя файла настроек.
     /// </summary>
-    private const string _gameSettingsFileName = "settings.json";
+    private const string _settingsFileName = "settings.json";
 
 
 
     /// <summary>
-    /// Имя папки, в которой хранятся сохранения игры.
+    /// Имя папки, в которой хранятся сохранения.
     /// </summary>
-    private const string _gameSavesFolderName = "Game saves";
+    private const string _savesFolderName = "Saves";
 
     /// <summary>
-    /// Имя файла сохранения игры.
+    /// Имя файла сохранения.
     /// </summary>
-    private const string _gameSaveFileName = "save.json";
+    private const string _saveFileName = "save.json";
 
     #endregion
 
@@ -82,30 +82,30 @@ public static class Globals
     #region Настройки игры
 
     /// <summary>
-    /// Полный путь к файлу настроек игры.
+    /// Полный путь к файлу настроек.
     /// </summary>
-    public static readonly string GameSettingsFilePath =
+    public static readonly string SettingsFilePath =
         Path.Combine(
             Application.persistentDataPath,
             _gameFolderName,
-            _gameSettingsFolderName,
-            _gameSettingsFileName);
+            _settingsFolderName,
+            _settingsFileName);
 
     #endregion
 
 
 
-    #region Настройки сохранения игры
+    #region Настройки сохранения
 
     /// <summary>
-    /// Полный путь к файлу сохранения игры.
+    /// Полный путь к файлу сохранения.
     /// </summary>
-    public static readonly string GameSaveFilePath =
+    public static readonly string SaveFilePath =
         Path.Combine(
             Application.persistentDataPath,
             _gameFolderName,
-            _gameSavesFolderName,
-            _gameSaveFileName);
+            _savesFolderName,
+            _saveFileName);
 
     #endregion
 
@@ -161,23 +161,28 @@ public static class Globals
     /// </summary>
     public const bool SettingsDefaultIsFileLogging = true;
 
+    /// <summary>
+    /// Значение включённого логирования во внутриигровую консоль по умолчанию.
+    /// </summary>
+    public const bool SettingsDefaultIsGameConsoleLogging = true;
+
     #endregion
 
 
 
-    #region Значения сохранения игры по умолчанию
+    #region Значения сохранения по умолчанию
 
     /// <summary>
-    /// Значение версии сохранения игры по умолчанию.
+    /// Значение версии сохранения по умолчанию.
     /// </summary>
-    public const int GameSaveDefaultVersion = 1;
+    public const int SaveDefaultVersion = 1;
 
 
 
     /// <summary>
     /// Название сцены по умолчанию.
     /// </summary>
-    public const string GameSaveDefaultSceneName = "Village Scene";
+    public const string SaveDefaultSceneName = "Village Scene";
 
     #endregion
 }

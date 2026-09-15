@@ -14,7 +14,7 @@ public class SettingsData
 
 
     /// <summary>
-    /// Разрешение экрана в формате "ШиринаxВысота".
+    /// Разрешение экрана в формате "Ширина x Высота".
     /// </summary>
     public string ScreenResolution = Globals.SettingsDefaultScreenResolution;
 
@@ -53,4 +53,9 @@ public class SettingsData
     /// Включена ли запись логов в файл.
     /// </summary>
     public bool IsFileLogging = Globals.SettingsDefaultIsFileLogging;
+
+    /// <summary>
+    /// Включено ли логирование во внутриигровую консоль.
+    /// </summary>
+    public bool IsGameConsoleLogging = Globals.SettingsDefaultIsGameConsoleLogging;
 }
