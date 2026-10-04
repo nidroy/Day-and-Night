@@ -1,0 +1,60 @@
+{
+  "LocalizationEntries": [
+    {
+      "Key": "Main menu title",
+      "Text": "Day and Night"
+    },
+    {
+      "Key": "New game button",
+      "Text": "Новая игра"
+    },
+    {
+      "Key": "Continue button",
+      "Text": "Продолжить"
+    },
+    {
+      "Key": "Settings button",
+      "Text": "Настройки"
+    },
+    {
+      "Key": "Quit game button",
+      "Text": "Выйти"
+    },
+    {
+      "Key": "Screen resolution title",
+      "Text": "Разрешение экрана"
+    },
+    {
+      "Key": "Localization title",
+      "Text": "Локализация"
+    },
+    {
+      "Key": "Full screen title",
+      "Text": "Полноэкранный режим"
+    },
+    {
+      "Key": "File logging title",
+      "Text": "Ведение журнала"
+    },
+    {
+      "Key": "Music volume title",
+      "Text": "Громкость музыки"
+    },
+    {
+      "Key": "Sound volume title",
+      "Text": "Громкость звуков"
+    },
+    {
+      "Key": "Save button",
+      "Text": "Сохранить"
+    },
+    {
+      "Key": "Cancel button",
+      "Text": "Отменить"
+    },
+    {
+      "Key": "Close button",
+      "Text": "Закрыть"
+    }
+  ]
+}
