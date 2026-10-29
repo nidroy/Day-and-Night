@@ -197,7 +197,12 @@ public class MainMenuController : MonoBehaviour
         try
         {
             SaveService.Default();
-            SaveService.Save();
+
+            if (!SaveService.Save())
+            {
+                LogError("Failed to save new game data. New game aborted.");
+                return;
+            }
 
             string sceneName = SaveService.SceneName;
 

@@ -11,43 +11,43 @@ public static class Globals
     /// <summary>
     /// Имя папки игры.
     /// </summary>
-    private const string _gameFolderName = "Day and Night";
+    private const string GameFolderName = "Day and Night";
 
 
 
     /// <summary>
     /// Имя папки, в которой хранятся логи.
     /// </summary>
-    private const string _logsFolderName = "Logs";
+    private const string LogsFolderName = "Logs";
 
     /// <summary>
     /// Имя файла логов.
     /// </summary>
-    private const string _logFileName = "game.log";
+    private const string LogFileName = "game.log";
 
 
 
     /// <summary>
     /// Имя папки, в которой хранятся настройки.
     /// </summary>
-    private const string _settingsFolderName = "Settings";
+    private const string SettingsFolderName = "Settings";
 
     /// <summary>
     /// Имя файла настроек.
     /// </summary>
-    private const string _settingsFileName = "settings.json";
+    private const string SettingsFileName = "settings.json";
 
 
 
     /// <summary>
     /// Имя папки, в которой хранятся сохранения.
     /// </summary>
-    private const string _savesFolderName = "Saves";
+    private const string SavesFolderName = "Saves";
 
     /// <summary>
     /// Имя файла сохранения.
     /// </summary>
-    private const string _saveFileName = "save.json";
+    private const string SaveFileName = "save.json";
 
     #endregion
 
@@ -71,9 +71,9 @@ public static class Globals
     public static readonly string LogFilePath =
         Path.Combine(
             Application.persistentDataPath,
-            _gameFolderName,
-            _logsFolderName,
-            _logFileName);
+            GameFolderName,
+            LogsFolderName,
+            LogFileName);
 
     #endregion
 
@@ -87,9 +87,9 @@ public static class Globals
     public static readonly string SettingsFilePath =
         Path.Combine(
             Application.persistentDataPath,
-            _gameFolderName,
-            _settingsFolderName,
-            _settingsFileName);
+            GameFolderName,
+            SettingsFolderName,
+            SettingsFileName);
 
     #endregion
 
@@ -103,9 +103,9 @@ public static class Globals
     public static readonly string SaveFilePath =
         Path.Combine(
             Application.persistentDataPath,
-            _gameFolderName,
-            _savesFolderName,
-            _saveFileName);
+            GameFolderName,
+            SavesFolderName,
+            SaveFileName);
 
     #endregion
 

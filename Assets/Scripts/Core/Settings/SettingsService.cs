@@ -102,7 +102,8 @@ public static class SettingsService
     /// <summary>
     /// Метод сохраняет текущие настройки в файл.
     /// </summary>
-    public static void Save()
+    /// <returns>True, если настройки сохранены успешно; иначе false.</returns>
+    public static bool Save()
     {
         try
         {
@@ -113,42 +114,39 @@ public static class SettingsService
             if (string.IsNullOrWhiteSpace(json))
             {
                 LogWarning("Settings serialization returned empty JSON. Save skipped.");
-                return;
+                return false;
             }
 
-            _settingsFileRepository.Save(json);
+            if (!_settingsFileRepository.Save(json))
+            {
+                LogError("Failed to write settings file. Save aborted.");
+                return false;
+            }
 
             LogInfo("Settings saved successfully.");
+            return true;
         }
         catch (Exception exception)
         {
             LogError($"Failed to save settings: {exception.Message}");
+            return false;
         }
     }
 
     /// <summary>
     /// Метод загружает настройки из файла.
     /// Если файл отсутствует, пустой или повреждён, загружает значения по умолчанию.
-    /// <returns>True, если настройки загружены успешно; иначе false.</returns>
     /// </summary>
+    /// <returns>True, если настройки загружены успешно; иначе false.</returns>
     public static bool Load()
     {
         try
         {
-            if (!_settingsFileRepository.Exists())
-            {
-                LogWarning("Settings file not found. Loading default settings.");
-
-                Default();
-
-                return false;
-            }
-
             string json = _settingsFileRepository.Load();
 
             if (string.IsNullOrWhiteSpace(json))
             {
-                LogWarning("Settings file is empty. Loading default settings.");
+                LogWarning("Settings file is missing or empty. Loading default settings.");
 
                 Default();
 
@@ -199,6 +197,9 @@ public static class SettingsService
     /// <summary>
     /// Метод применяет текущие настройки из памяти.
     /// </summary>
+    /// <remarks>
+    /// Применяются только «глобальные» настройки: разрешение, полноэкранный режим и логирование.
+    /// </remarks>
     public static void Apply()
     {
         LogInfo("Applying current settings.");
@@ -225,7 +226,7 @@ public static class SettingsService
         }
 
         string normalizedResolution = screenResolution.Replace(" ", "");
-        string[] values = normalizedResolution.Split('x');
+        string[] values = normalizedResolution.Split('x', 'X');
 
         if (values.Length != 2)
         {
@@ -236,6 +237,12 @@ public static class SettingsService
         if (!int.TryParse(values[0], out int width) || !int.TryParse(values[1], out int height))
         {
             LogWarning($"Failed to parse resolution values: {screenResolution}");
+            return;
+        }
+
+        if (width <= 0 || height <= 0)
+        {
+            LogWarning($"Resolution values must be positive: {screenResolution}");
             return;
         }
 
@@ -305,7 +312,7 @@ public static class SettingsService
     /// <summary>
     /// Метод применяет настройку вывода логов во внутриигровую консоль.
     /// </summary>
-    /// <param name="isGameConsoleLogging"> True, если вывод логов во внутриигровую консоль должен быть включён; иначе false.</param>
+    /// <param name="isGameConsoleLogging">True, если вывод логов во внутриигровую консоль должен быть включён; иначе false.</param>
     public static void ApplyGameConsoleLogging(bool isGameConsoleLogging)
     {
         Logger.IsGameConsoleLoggingEnabled = isGameConsoleLogging;

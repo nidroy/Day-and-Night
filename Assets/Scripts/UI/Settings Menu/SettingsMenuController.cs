@@ -11,9 +11,9 @@ public class SettingsMenuController
     #region Поля
 
     /// <summary>
-    /// Словарь локализуемых UI-элементов: ключ текстового компонента -> текстовый компонент.
+    /// Список локализуемых UI-элементов: ключ текстового компонента -> текстовый компонент.
     /// </summary>
-    private readonly List<KeyValuePair<string, TMP_Text>> _localizationTargetsDictionary = new List<KeyValuePair<string, TMP_Text>>();
+    private readonly List<KeyValuePair<string, TMP_Text>> _localizationTargets = new List<KeyValuePair<string, TMP_Text>>();
 
     /// <summary>
     /// Временные данные настроек для UI.
@@ -41,11 +41,11 @@ public class SettingsMenuController
     }
 
     /// <summary>
-    /// Словарь локализуемых UI-элементов.
+    /// Список локализуемых UI-элементов.
     /// </summary>
-    public List<KeyValuePair<string, TMP_Text>> LocalizationTargetsDictionary
+    public List<KeyValuePair<string, TMP_Text>> LocalizationTargets
     {
-        get => _localizationTargetsDictionary;
+        get => _localizationTargets;
     }
 
     /// <summary>
@@ -91,7 +91,8 @@ public class SettingsMenuController
             SoundVolume = SettingsService.SoundVolume,
             Localization = SettingsService.Localization,
             LanguageCode = SettingsService.LanguageCode,
-            IsFileLogging = SettingsService.IsFileLogging
+            IsFileLogging = SettingsService.IsFileLogging,
+            IsGameConsoleLogging = SettingsService.IsGameConsoleLogging
         };
 
         LogInfo("Temporary settings restored from in-memory settings.");
@@ -125,11 +126,11 @@ public class SettingsMenuController
     }
 
     /// <summary>
-    /// Метод собирает словарь локализуемых UI-элементов.
+    /// Метод собирает список локализуемых UI-элементов.
     /// </summary>
     private void InitializeLocalizationTargets(List<LocalizationTarget> localizationTargets)
     {
-        _localizationTargetsDictionary.Clear();
+        _localizationTargets.Clear();
 
         if (localizationTargets == null)
         {
@@ -153,10 +154,10 @@ public class SettingsMenuController
                 continue;
             }
 
-            _localizationTargetsDictionary.Add(new KeyValuePair<string, TMP_Text>(target.Key, target.Text));
+            _localizationTargets.Add(new KeyValuePair<string, TMP_Text>(target.Key, target.Text));
         }
 
-        LogInfo($"Localization targets dictionary built. Count: {_localizationTargetsDictionary.Count}.");
+        LogInfo($"Localization targets list built. Count: {_localizationTargets.Count}.");
     }
 
     #endregion
@@ -177,6 +178,7 @@ public class SettingsMenuController
         SettingsService.Localization = TempSettingsData.Localization;
         SettingsService.LanguageCode = TempSettingsData.LanguageCode;
         SettingsService.IsFileLogging = TempSettingsData.IsFileLogging;
+        SettingsService.IsGameConsoleLogging = TempSettingsData.IsGameConsoleLogging;
 
         LogInfo("Temporary settings applied to in-memory settings.");
     }
@@ -265,7 +267,7 @@ public class SettingsMenuController
             return;
         }
 
-        SettingsService.ApplyLocalization(TempSettingsData.LanguageCode, _localizationTargetsDictionary);
+        SettingsService.ApplyLocalization(TempSettingsData.LanguageCode, _localizationTargets);
 
         IsSettingsChanged = true;
 

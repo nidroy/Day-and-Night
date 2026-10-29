@@ -40,11 +40,19 @@ public static class SettingsDataValidator
         {
             data.Localization = Globals.SettingsDefaultLocalization;
         }
+        else
+        {
+            data.Localization = data.Localization.Trim();
+        }
 
         // Если код языка не задан, используем значение по умолчанию.
         if (string.IsNullOrWhiteSpace(data.LanguageCode))
         {
             data.LanguageCode = Globals.SettingsDefaultLanguageCode;
+        }
+        else
+        {
+            data.LanguageCode = data.LanguageCode.Trim();
         }
     }
 }

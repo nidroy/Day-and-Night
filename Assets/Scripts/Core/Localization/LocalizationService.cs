@@ -25,7 +25,7 @@ public static class LocalizationService
     /// Метод загружает локализацию из Resources/Localization/{languageCode}.
     /// Ожидается JSON-файл, содержащий список записей локализации.
     /// </summary>
-    /// <param name="languageCode">Код языка, например "en" или "ru".</param>
+    /// <param name="languageCode">Код языка, например "EN" или "RU".</param>
     /// <returns>true, если локализация загружена успешно, иначе false.</returns>
     public static bool LoadLocalization(string languageCode)
     {
@@ -35,12 +35,15 @@ public static class LocalizationService
             return false;
         }
 
+        // Нормализуем код языка (обрезаем пробелы).
+        string normalizedCode = languageCode.Trim();
+
         // Загружаем JSON-файл локализации из папки Resources.
-        TextAsset file = Resources.Load<TextAsset>($"Localization/{languageCode}");
+        TextAsset file = Resources.Load<TextAsset>($"Localization/{normalizedCode}");
 
         if (file == null)
         {
-            LogError($"Localization file not found: {languageCode}");
+            LogError($"Localization file not found: {normalizedCode}");
             return false;
         }
 
@@ -49,7 +52,7 @@ public static class LocalizationService
 
         if (data == null || data.LocalizationEntries == null)
         {
-            LogError("Localization data is invalid.");
+            LogError($"Localization data is invalid: {normalizedCode}");
             return false;
         }
 
@@ -64,12 +67,19 @@ public static class LocalizationService
                 continue;
             }
 
+            // Предупреждаем о дублирующихся ключах вместо тихой перезаписи.
+            if (loaded.ContainsKey(entry.Key))
+            {
+                LogWarning($"Duplicate localization key skipped: {entry.Key}");
+                continue;
+            }
+
             loaded[entry.Key] = entry.Text ?? string.Empty;
         }
 
         if (loaded.Count == 0)
         {
-            LogWarning("Localization contains no valid entries.");
+            LogWarning($"Localization contains no valid entries: {normalizedCode}");
             return false;
         }
 
@@ -83,13 +93,13 @@ public static class LocalizationService
 
         IsLoaded = true;
 
-        LogInfo($"Localization loaded: {languageCode}");
+        // Логируем количество загруженных строк.
+        LogInfo($"Localization loaded: {normalizedCode}. Entries: {_translations.Count}.");
         return true;
     }
 
     /// <summary>
     /// Метод возвращает перевод по ключу.
-    /// Если ключ не найден, возвращает сам ключ как fallback.
     /// </summary>
     /// <param name="key">Ключ локализации.</param>
     /// <returns>Переведённая строка или сам ключ, если перевод не найден.</returns>

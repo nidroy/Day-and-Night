@@ -64,7 +64,7 @@ public class Bootstrap : MonoBehaviour
 
         if (remainingTime > 0f)
         {
-            yield return new WaitForSeconds(remainingTime);
+            yield return new WaitForSecondsRealtime(remainingTime);
         }
 
         LogInfo("Bootstrap finished.");
@@ -84,7 +84,6 @@ public class Bootstrap : MonoBehaviour
             if (!SettingsService.Load())
             {
                 LogWarning("Settings loading failed. Default settings will be used.");
-                SettingsService.Default();
                 SettingsService.Save();
             }
 
@@ -93,9 +92,18 @@ public class Bootstrap : MonoBehaviour
         catch (Exception exception)
         {
             LogError($"Settings initialization failed: {exception.Message}");
+
             SettingsService.Default();
             SettingsService.Save();
-            SettingsService.Apply();
+
+            try
+            {
+                SettingsService.Apply();
+            }
+            catch (Exception applyException)
+            {
+                LogError($"Failed to apply default settings: {applyException.Message}");
+            }
         }
     }
 

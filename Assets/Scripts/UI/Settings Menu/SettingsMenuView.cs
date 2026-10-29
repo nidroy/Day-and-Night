@@ -23,7 +23,7 @@ public class SettingsMenuView : MonoBehaviour
     /// </summary>
     [Header("Menu Window")]
     [SerializeField]
-    private GameObject _settingsMenu;
+    private GameObject _settingsMenuWindow;
 
 
 
@@ -204,13 +204,13 @@ public class SettingsMenuView : MonoBehaviour
     /// </summary>
     public void ShowSettingsMenu()
     {
-        if (_settingsMenu == null)
+        if (_settingsMenuWindow == null)
         {
             LogWarning("Settings menu window is not assigned.");
             return;
         }
 
-        _settingsMenu.SetActive(true);
+        _settingsMenuWindow.SetActive(true);
         LogInfo("Settings menu window shown.");
     }
 
@@ -219,13 +219,13 @@ public class SettingsMenuView : MonoBehaviour
     /// </summary>
     public void HideSettingsMenu()
     {
-        if (_settingsMenu == null)
+        if (_settingsMenuWindow == null)
         {
             LogWarning("Settings menu window is not assigned.");
             return;
         }
 
-        _settingsMenu.SetActive(false);
+        _settingsMenuWindow.SetActive(false);
         LogInfo("Settings menu window hidden.");
     }
 
@@ -509,7 +509,12 @@ public class SettingsMenuView : MonoBehaviour
         LogInfo("Save button clicked.");
 
         _controller.ApplySettings();
-        SettingsService.Save();
+
+        if (!SettingsService.Save())
+        {
+            LogError("Failed to save settings. Change flag kept.");
+            return;
+        }
 
         _controller.ResetSettingsChanged();
         UpdateButtons();
@@ -518,7 +523,7 @@ public class SettingsMenuView : MonoBehaviour
     }
 
     /// <summary>
-    /// Обработчик нажатие на кнопку отмены изменений.
+    /// Обработчик нажатия на кнопку отмены изменений.
     /// </summary>
     private void OnCancelClicked()
     {
@@ -531,6 +536,13 @@ public class SettingsMenuView : MonoBehaviour
         LogInfo("Cancel button clicked.");
 
         _controller.RestoreSettings();
+
+        _controller.ApplyScreenResolution();
+        _controller.ApplyFullScreen();
+        _controller.ApplyMusicVolume(_musicSource);
+        _controller.ApplySoundVolume(_soundSources);
+        _controller.ApplyLocalization();
+        _controller.ApplyFileLogging();
 
         UpdateUI();
 

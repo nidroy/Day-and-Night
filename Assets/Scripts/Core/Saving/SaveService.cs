@@ -50,7 +50,8 @@ public static class SaveService
     /// <summary>
     /// Метод сохраняет текущее состояние игры в файл.
     /// </summary>
-    public static void Save()
+    /// <returns>True, если сохранение прошло успешно; иначе false.</returns>
+    public static bool Save()
     {
         try
         {
@@ -61,16 +62,22 @@ public static class SaveService
             if (string.IsNullOrWhiteSpace(json))
             {
                 LogWarning("Save serialization returned empty JSON. Save skipped.");
-                return;
+                return false;
             }
 
-            _saveFileRepository.Save(json);
+            if (!_saveFileRepository.Save(json))
+            {
+                LogError("Failed to write save file. Save aborted.");
+                return false;
+            }
 
             LogInfo("Saved successfully.");
+            return true;
         }
         catch (Exception exception)
         {
             LogError($"Failed to save: {exception.Message}");
+            return false;
         }
     }
 
@@ -82,18 +89,11 @@ public static class SaveService
     {
         try
         {
-            if (!_saveFileRepository.Exists())
-            {
-                LogWarning("Save file not found.");
-
-                return false;
-            }
-
             string json = _saveFileRepository.Load();
 
             if (string.IsNullOrWhiteSpace(json))
             {
-                LogWarning("Save file is empty.");
+                LogWarning("Save file is missing or empty.");
 
                 return false;
             }
@@ -135,22 +135,24 @@ public static class SaveService
     /// <summary>
     /// Метод удаляет файл сохранения.
     /// </summary>
-    public static void Delete()
+    /// <returns>True, если файл удалён или отсутствовал; иначе false.</returns>
+    public static bool Delete()
     {
         try
         {
-            if (!IsSaveFileExists)
+            if (!_saveFileRepository.Delete())
             {
-                LogWarning("Save file not found. Delete skipped.");
-                return;
+                LogError("Failed to delete save file.");
+                return false;
             }
 
-            _saveFileRepository.Delete();
             LogInfo("Save deleted successfully.");
+            return true;
         }
         catch (Exception exception)
         {
             LogError($"Failed to delete save: {exception.Message}");
+            return false;
         }
     }
 

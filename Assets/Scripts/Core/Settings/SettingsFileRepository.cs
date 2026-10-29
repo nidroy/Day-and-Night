@@ -60,12 +60,13 @@ public class SettingsFileRepository
     /// Метод сохраняет JSON в файл настроек.
     /// </summary>
     /// <param name="json">JSON-строка с настройками.</param>
-    public void Save(string json)
+    /// <returns>True, если файл записан успешно; иначе false.</returns>
+    public bool Save(string json)
     {
         if (string.IsNullOrWhiteSpace(json))
         {
             LogWarning("Settings save skipped because JSON is empty.");
-            return;
+            return false;
         }
 
         try
@@ -73,10 +74,12 @@ public class SettingsFileRepository
             File.WriteAllText(_settingsFilePath, json);
 
             LogInfo($"Settings saved successfully. Path: {_settingsFilePath}");
+            return true;
         }
         catch (Exception exception)
         {
             LogError($"Failed to save settings file. Path: {_settingsFilePath}. Error: {exception.Message}");
+            return false;
         }
     }
 
@@ -113,25 +116,28 @@ public class SettingsFileRepository
     }
 
     /// <summary>
-    /// Метод удаляет файл настроек, если он существует.
+    /// Метод удаляет файл настроек.
     /// </summary>
-    public void Delete()
+    /// <returns>True, если файл удалён или отсутствовал; иначе false.</returns>
+    public bool Delete()
     {
         try
         {
             if (!File.Exists(_settingsFilePath))
             {
                 LogWarning($"Settings file not found for delete. Path: {_settingsFilePath}");
-                return;
+                return true;
             }
 
             File.Delete(_settingsFilePath);
 
             LogInfo($"Settings file deleted successfully. Path: {_settingsFilePath}");
+            return true;
         }
         catch (Exception exception)
         {
             LogError($"Failed to delete settings file. Path: {_settingsFilePath}. Error: {exception.Message}");
+            return false;
         }
     }
 

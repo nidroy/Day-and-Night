@@ -27,12 +27,12 @@ public static class Logger
     /// <summary>
     /// Лог-синк для вывода сообщений в консоль Unity.
     /// </summary>
-    private static ILogSink _unityConsoleLogSink = new UnityConsoleLogSink();
+    private static readonly ILogSink _unityConsoleLogSink = new UnityConsoleLogSink();
 
     /// <summary>
     /// Лог-синк для записи сообщений в файл.
     /// </summary>
-    private static ILogSink _fileLogSink = new FileLogSink(_logFilePath, _maxLogFileSizeMB);
+    private static ILogSink _fileLogSink;
 
     /// <summary>
     /// Лог-синк для внутриигровой консоли.
@@ -44,12 +44,19 @@ public static class Logger
     /// <summary>
     /// Флаг, указывающий, включено ли файловое логирование.
     /// </summary>
-    private static bool _isFileLoggingEnabled = true;
+    private static bool _isFileLoggingEnabled = Globals.SettingsDefaultIsFileLogging;
 
     /// <summary>
     /// Флаг, указывающий, включён ли вывод во внутриигровую консоль.
     /// </summary>
-    private static bool _isGameConsoleLoggingEnabled = true;
+    private static bool _isGameConsoleLoggingEnabled = Globals.SettingsDefaultIsGameConsoleLogging;
+
+
+
+    /// <summary>
+    /// Минимальный уровень сообщений, которые попадают в лог.
+    /// </summary>
+    private static LogLevel _minLevel = LogLevel.Info;
 
 
 
@@ -59,15 +66,7 @@ public static class Logger
     public static bool IsFileLoggingEnabled
     {
         get => _isFileLoggingEnabled;
-        set
-        {
-            _isFileLoggingEnabled = value;
-
-            if (value && _fileLogSink == null)
-            {
-                _fileLogSink = new FileLogSink(_logFilePath, _maxLogFileSizeMB);
-            }
-        }
+        set => _isFileLoggingEnabled = value;
     }
 
     /// <summary>
@@ -77,6 +76,17 @@ public static class Logger
     {
         get => _isGameConsoleLoggingEnabled;
         set => _isGameConsoleLoggingEnabled = value;
+    }
+
+
+
+    /// <summary>
+    /// Свойство определяет минимальный уровень сообщений, которые записываются в лог.
+    /// </summary>
+    public static LogLevel MinLevel
+    {
+        get => _minLevel;
+        set => _minLevel = value;
     }
 
 
@@ -100,6 +110,11 @@ public static class Logger
     /// <param name="message">Текст сообщения.</param>
     public static void Log(LogLevel level, string source, string message)
     {
+        if (level < _minLevel)
+        {
+            return;
+        }
+
         try
         {
             _unityConsoleLogSink?.Write(level, source, message);
@@ -111,12 +126,69 @@ public static class Logger
 
             if (_isFileLoggingEnabled)
             {
+                CreateFileLogSink();
                 _fileLogSink?.Write(level, source, message);
             }
         }
         catch (Exception exception)
         {
             Debug.LogError($"Logger internal error: {exception.Message}");
+        }
+    }
+
+
+
+    /// <summary>
+    /// Метод записывает информационное сообщение.
+    /// </summary>
+    public static void LogInfo(string source, string message) => Log(LogLevel.Info, source, message);
+
+    /// <summary>
+    /// Метод записывает предупреждение.
+    /// </summary>
+    public static void LogWarning(string source, string message) => Log(LogLevel.Warning, source, message);
+
+    /// <summary>
+    /// Метод записывает ошибку.
+    /// </summary>
+    public static void LogError(string source, string message) => Log(LogLevel.Error, source, message);
+
+
+
+    /// <summary>
+    /// Метод закрывает логгер и освобождает ресурсы.
+    /// Рекомендуется вызывать из OnApplicationQuit.
+    /// </summary>
+    public static void Close()
+    {
+        if (_fileLogSink is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+
+        _fileLogSink = null;
+    }
+
+
+
+    /// <summary>
+    /// Метод создаёт файловый лог-синк, если он ещё не создан.
+    /// </summary>
+    private static void CreateFileLogSink()
+    {
+        if (_fileLogSink != null)
+        {
+            return;
+        }
+
+        try
+        {
+            _fileLogSink = new FileLogSink(_logFilePath, _maxLogFileSizeMB);
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError($"Failed to create file log sink: {exception.Message}");
+            _isFileLoggingEnabled = false;
         }
     }
 }

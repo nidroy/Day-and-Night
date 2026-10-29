@@ -60,12 +60,13 @@ public class SaveFileRepository
     /// Метод сохраняет JSON-строку в файл сохранения.
     /// </summary>
     /// <param name="json">JSON-строка с данными сохранения.</param>
-    public void Save(string json)
+    /// <returns>True, если файл записан успешно; иначе false.</returns>
+    public bool Save(string json)
     {
         if (string.IsNullOrWhiteSpace(json))
         {
             LogWarning("Save skipped because JSON is empty.");
-            return;
+            return false;
         }
 
         try
@@ -73,10 +74,12 @@ public class SaveFileRepository
             File.WriteAllText(_saveFilePath, json);
 
             LogInfo($"Save file written successfully. Path: {_saveFilePath}");
+            return true;
         }
         catch (Exception exception)
         {
             LogError($"Failed to save file. Path: {_saveFilePath}. Error: {exception.Message}");
+            return false;
         }
     }
 
@@ -113,25 +116,28 @@ public class SaveFileRepository
     }
 
     /// <summary>
-    /// Метод удаляет файл сохранения, если он существует.
+    /// Метод удаляет файл сохранения.
     /// </summary>
-    public void Delete()
+    /// <returns>True, если файл удалён или отсутствовал; иначе false.</returns>
+    public bool Delete()
     {
         try
         {
             if (!File.Exists(_saveFilePath))
             {
                 LogWarning($"Save file not found for delete. Path: {_saveFilePath}");
-                return;
+                return true;
             }
 
             File.Delete(_saveFilePath);
 
             LogInfo($"Save file deleted successfully. Path: {_saveFilePath}");
+            return true;
         }
         catch (Exception exception)
         {
             LogError($"Failed to delete save file. Path: {_saveFilePath}. Error: {exception.Message}");
+            return false;
         }
     }
 
